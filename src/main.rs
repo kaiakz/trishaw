@@ -1,9 +1,8 @@
 extern crate clap;
 
-use clap::{Arg, App, SubCommand, AppSettings};
+use clap::{App, AppSettings, Arg, SubCommand};
 
 fn main() {
-
     let matches = App::new("trishaw")
         .about("Processes spec source files into valid HTML.")
         .setting(AppSettings::DeriveDisplayOrder)
@@ -99,7 +98,6 @@ fn main() {
                 .long("just-tar")
                 .takes_value(true))
         )
-
         .subcommand(SubCommand::with_name("watch")
             .about("Process a spec source file into a valid output file, automatically rebuilding when it changes.")
             .setting(AppSettings::DeriveDisplayOrder)
@@ -120,10 +118,38 @@ fn main() {
                 .long("byos")
                 .help("Bring-Your-Own-Spec: turns off all the Bikeshed auto-niceties, so you can piecemeal its features into your existing doc instead. Experimental, let me know if things get crashy or weird."))
         )
-        // TODO: add argument for each subcommand
         .subcommand(SubCommand::with_name("serve")
             .about("Identical to 'watch', but also serves the folder on localhost.")
-            .setting(AppSettings::DeriveDisplayOrder))
+            .setting(AppSettings::DeriveDisplayOrder)
+            .about("Process a spec source file into a valid output file, automatically rebuilding when it changes.")
+            .setting(AppSettings::DeriveDisplayOrder)
+            .arg(Arg::with_name("infile")
+                .required(true)
+                .takes_value(true)
+                .help("Path to the source file."))
+            .arg(Arg::with_name("outfile")
+                .required(true)
+                .takes_value(true)
+                .help("Path to the output file."))
+            .arg(Arg::with_name("port")
+                .long("port")
+                .takes_value(true)
+                .help("Path to the output file."))
+            .arg(Arg::with_name("localhost")
+                .default_value("8000")
+                .long("port")
+                .takes_value(true)
+                .help("Path to the output file."))
+            .arg(Arg::with_name("gh-token")
+                .long("gh-token")
+                .value_name("GHTOKEN")
+                .takes_value(true)
+                .help("GitHub access token. Useful to avoid API rate limits. Generate tokens: https://github.com/settings/tokens."))
+            .arg(Arg::with_name("byos")
+                .long("byos")
+                .help("Bring-Your-Own-Spec: turns off all the Bikeshed auto-niceties, so you can piecemeal its features into your existing doc instead. Experimental, let me know if things get crashy or weird."))
+        )
+        // TODO: add argument for each subcommand
         .subcommand(SubCommand::with_name("update")
             .about("Update supporting files (those in /spec-data).")
             .setting(AppSettings::DeriveDisplayOrder))
@@ -154,6 +180,6 @@ fn main() {
         .get_matches();
 
     match matches {
-        _ => {},
+        _ => {}
     };
 }
